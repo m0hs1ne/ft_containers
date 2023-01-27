@@ -1,8 +1,5 @@
-#ifndef VITERATORS_HPP
-#define VITERATORS_HPP
-
-#include <iterator>
-#include <iostream>
+#ifndef REVERSEITERATOR_HPP
+#define REVERSEITERATOR_HPP
 
 namespace ft
 {
@@ -39,6 +36,16 @@ namespace ft
         typedef std::random_access_iterator_tag iterator_category;
     };
 
+    template <class Iterator>
+    class VectorIterator
+    {
+    public:
+        typedef Iterator iterator_type;
+        typedef typename Iterator_traits<Iterator>::iterator_category iterator_category;
+        typedef typename Iterator_traits<Iterator>::value_type value_type;
+        typedef typename Iterator_traits<Iterator>::difference_type difference_type;
+        typedef typename Iterator_traits<Iterator>::pointer pointer;
+        typedef typename Iterator_traits<Iterator>::reference reference;
+    };
 }
-
 #endif

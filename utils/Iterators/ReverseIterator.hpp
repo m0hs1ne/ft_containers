@@ -1,7 +1,7 @@
 #ifndef REVERSEITERATOR_HPP
 #define REVERSEITERATOR_HPP
 
-#include "../vIterators.hpp"
+#include "IteratorTraits.hpp"
 
 namespace ft
 {
@@ -19,7 +19,7 @@ namespace ft
         typedef typename Iterator_traits<Iterator>::pointer pointer;
         typedef typename Iterator_traits<Iterator>::reference reference;
 
-        reverse_iterator() : _current() {}
+        reverse_iterator() : _current(nullptr) {}
         template <class Iter>
         reverse_iterator(const reverse_iterator<Iter> &rev_it) : _current(rev_it.base()) {}
         explicit reverse_iterator(iterator_type x) : _current(x) {}
