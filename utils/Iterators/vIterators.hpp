@@ -5,25 +5,22 @@
 
 namespace ft
 {
-    template <class Iterator>
+    template <class T>
     class VectorIterator
     {
-    protected:
-        Iterator ptr;
-
     public:
-        typedef Iterator iterator_type;
-        typedef typename Iterator_traits<Iterator>::iterator_category iterator_category;
-        typedef typename Iterator_traits<Iterator>::value_type value_type;
-        typedef typename Iterator_traits<Iterator>::difference_type difference_type;
-        typedef typename Iterator_traits<Iterator>::pointer pointer;
-        typedef typename Iterator_traits<Iterator>::reference reference;
+        typedef T iterator_type;
+        typedef typename ft::Iterator_traits<T*>::pointer pointer;
+        typedef typename ft::Iterator_traits<pointer>::iterator_category iterator_category;
+        typedef typename ft::Iterator_traits<pointer>::value_type value_type;
+        typedef typename ft::Iterator_traits<pointer>::difference_type difference_type;
+        typedef typename ft::Iterator_traits<pointer>::reference reference;
 
         VectorIterator() : ptr(nullptr) {}
         template <class Iter>
         VectorIterator(const VectorIterator<Iter> &vec_it) : ptr(vec_it.base()) {}
-        explicit VectorIterator(iterator_type x) : ptr(x) {}
-        iterator_type base() const { return ptr; }
+        explicit VectorIterator(pointer x) : ptr(x) {}
+        pointer base() const { return ptr; }
         template <class Iter>
         VectorIterator &operator=(const VectorIterator<Iter> &vec_it)
         {
@@ -67,6 +64,8 @@ namespace ft
             ptr -= n;
             return *this;
         }
+    protected:
+        pointer ptr;
     };
 
     template <class Iterator>
