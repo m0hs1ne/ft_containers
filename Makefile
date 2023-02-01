@@ -14,7 +14,7 @@ SHELL		=	/bin/bash
 
 NAME		= containers
 CC			= g++
-CFLAGS		= -Wall -Werror -Wextra -std=c++98
+CFLAGS		= -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g
 RM			= rm -f
 ECHO		= echo -e
 

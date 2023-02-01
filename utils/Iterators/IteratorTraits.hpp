@@ -1,6 +1,8 @@
 #ifndef ITERATORTRAITS_HPP
 #define ITERATORTRAITS_HPP
 
+#include <iostream>
+
 namespace ft
 {
     template <class Iterator>

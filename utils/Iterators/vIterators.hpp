@@ -17,16 +17,20 @@ namespace ft
         typedef typename ft::Iterator_traits<pointer>::reference reference;
 
         VectorIterator() : ptr(nullptr) {}
+
         template <class Iter>
         VectorIterator(const VectorIterator<Iter> &vec_it) : ptr(vec_it.base()) {}
+
         explicit VectorIterator(pointer x) : ptr(x) {}
         pointer base() const { return ptr; }
+
         template <class Iter>
         VectorIterator &operator=(const VectorIterator<Iter> &vec_it)
         {
             ptr = vec_it.base();
             return *this;
         }
+        
         reference operator*() const { return *ptr; }
         pointer operator->() const { return &(operator*()); }
         reference operator[](difference_type n) const { return (ptr[n]); }

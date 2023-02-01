@@ -33,13 +33,13 @@ namespace ft
 
     public:
         // Constructors
-        explicit Vector(const allocator_type &alloc = allocator_type()) : _alloc(alloc), _data(NULL), _size(0), _capacity(0) {}
-        explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : _alloc(alloc), _data(NULL), _size(0), _capacity(0)
+        explicit Vector(const allocator_type &alloc = allocator_type()) : _alloc(alloc), _data(nullptr), _size(0), _capacity(0) {}
+        explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : _alloc(alloc), _data(nullptr), _size(0), _capacity(0)
         {
             assign(n, val);
         }
         template <class InputIterator>
-        Vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type()) : _alloc(alloc), _data(NULL), _size(0), _capacity(0)
+        Vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type()) : _alloc(alloc), _data(nullptr), _size(0), _capacity(0)
         {
             assign(first, last);
         }
@@ -51,11 +51,15 @@ namespace ft
         ~Vector()
         {
             clear();
+            if (_data)
+                _alloc.deallocate(_data, _capacity);
+            _capacity = 0;
         }
         // Assignment operator
         Vector &operator=(const Vector &x)
         {
-            assign(x.begin(), x.end());
+            if (this != &x)
+                assign(x.begin(), x.end());
             return *this;
         }
         // Iterators
@@ -90,6 +94,55 @@ namespace ft
         const_reverse_iterator rend() const
         {
             return const_reverse_iterator(begin());
+        }
+
+        // Capacity
+        size_type size() const
+        {
+            return _size;
+        }
+        size_type max_size() const
+        {
+            return _alloc.max_size();
+        }
+        void resize(size_type n, value_type val = value_type())
+        {
+            if (n > _size)
+            {
+                if (n > _capacity)
+                    reserve(n);
+                for (size_type i = _size; i < n; i++)
+                    _alloc.construct(_data + _size++, val);
+            }
+            else if (n < _size)
+            {
+                for (size_type i = n; i < _size; i++)
+                    _alloc.destroy(_data + i);
+                _size = n;
+            }
+        }
+        size_type capacity() const
+        {
+            return _capacity;
+        }
+        bool empty() const
+        {
+            return _size == 0;
+        }
+        void reserve(size_type n)
+        {
+            if (n > _capacity)
+            {
+                pointer tmp = _alloc.allocate(n);
+                for (size_type i = 0; i < _size; i++)
+                {
+                    _alloc.construct(tmp + i, _data[i]);
+                    _alloc.destroy(_data + i);
+                }
+                _alloc.deallocate(_data, _capacity);
+                _data = tmp;
+                _capacity = n;
+            }
         }
 
         // Element access
@@ -143,7 +196,6 @@ namespace ft
         {
             clear();
             _capacity = n;
-            _data = _alloc.allocate(_capacity);
             for (size_type i = 0; i < n; i++)
                 _alloc.construct(_data + _size++, val);
         }
@@ -158,16 +210,28 @@ namespace ft
             for (Iter it = first; it != last; it++)
                 _alloc.construct(_data + _size++, *it);
         }
-
+        
         void clear()
         {
             for (size_type i = 0; i < _size; i++)
                 _alloc.destroy(_data + i);
-            _alloc.deallocate(_data, _capacity);
             _data = NULL;
             _size = 0;
             _capacity = 0;
         }
+
+        void push_back(const value_type &val)
+        {
+            if (_size == _capacity)
+            {
+                if (_capacity == 0)
+                    reserve(1);
+                else
+                    reserve(_capacity * 2);
+            }
+            _alloc.construct(_data + _size++, val);
+        }
+
         // Allocator
         allocator_type get_allocator() const
         {
