@@ -107,12 +107,23 @@ namespace ft
         }
         void resize(size_type n, value_type val = value_type())
         {
+            if (n == 0)
+            {
+                clear();
+                return;
+            }
             if (n > _size)
             {
                 if (n > _capacity)
-                    reserve(n);
+                {
+                    if (_capacity * 2 > n)
+                        reserve(_capacity * 2);
+                    else
+                        reserve(n);
+                }
                 for (size_type i = _size; i < n; i++)
-                    _alloc.construct(_data + _size++, val);
+                    push_back(val);
+                _size = n;
             }
             else if (n < _size)
             {
@@ -194,23 +205,37 @@ namespace ft
         // Modifiers
         void assign(size_type n, const value_type &val)
         {
+            size_type tmp = _capacity;
             clear();
-            _capacity = n;
+            _capacity = tmp;
+            if (_capacity < n)
+                reserve(n);
+            _data = _alloc.allocate(_capacity);
             for (size_type i = 0; i < n; i++)
                 _alloc.construct(_data + _size++, val);
         }
 
         template <class Iter>
         void assign(Iter first, Iter last,
-                    typename ft::enable_if<!ft::is_integral<Iter>::value, Iter>::type * = 0)
+                    typename ft::enable_if<!ft::is_integral<Iter>::value && std::__is_random_access_iterator<Iter>::value, Iter>::type * = 0)
         {
+            if(first == last)
+            {
+                _size = 0;
+                return;
+            }
+            size_type tmp = _capacity;
             clear();
-            _capacity = last - first;
+            _capacity = tmp;
+            if (first > last)
+                throw std::length_error("vector");
+            if (_capacity < (size_type)(last - first))
+                reserve(last - first);
             _data = _alloc.allocate(_capacity);
             for (Iter it = first; it != last; it++)
                 _alloc.construct(_data + _size++, *it);
         }
-        
+
         void clear()
         {
             for (size_type i = 0; i < _size; i++)

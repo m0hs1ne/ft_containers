@@ -44,7 +44,7 @@ clean:
 fclean:		clean
 			@$(RM) $(NAME)
 			@find . -name ".DS_Store" -delete
-			@rm -rf checker.dSYM
+			@rm -rf containers.dSYM
 			@$(ECHO) -n "$(CYAN)[containers]:\texec. files$(DEF_COLOR)$(GREEN)  => Cleaned!$(DEF_COLOR)\n"
 
 
