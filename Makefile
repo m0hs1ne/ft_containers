@@ -1,20 +1,8 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mel-hada <mel-hada@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/10/18 12:21:47 by mel-hada          #+#    #+#              #
-#    Updated: 2022/03/19 11:33:12 by mel-hada         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 SHELL		=	/bin/bash
 
 NAME		= containers
 CC			= g++
-CFLAGS		= -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g
+CFLAGS		= -Wall -Werror -Wextra -std=c++98 #-fsanitize=address
 RM			= rm -f
 ECHO		= echo -e
 

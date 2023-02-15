@@ -1,105 +1,166 @@
 #include <iostream>
 #include <cassert>
-#include "utils/Containers/Vector.hpp"
+#include "utils/Containers/vector.hpp"
 #include <vector>
+#include <sstream>
 
-// std::string s_string[32] = {                                                                   \
-//         "QExoqp0nICr0sXsHqty2", "naax9QcpJhvaL7DezsNQ", "25ZTtB6wbptfbxM8AvHB",                    \
-//         "tShYNtc0MkdjqLrOatgz", "7Z3kf1Qec0NnsLSEpbOt", "WhkSNrKJC966fvjZ2Or1",                    \
-//         "8vlxlFRRgW7yYj4GO7dt", "5sq1aoT8zP0HaHj3nFOK", "61Dv31GYZhkgjKCErpng",                    \
-//         "l0IIcWWHhOcPzoxEamQM", "bE1RYclskwXlhCm46YFs", "kXeoi5qz94JYPqSDTs79",                    \
-//         "TFsQP1dz8VVos9KzUpY0", "b3wYQR7An193gjgYuRj3", "xSmyNsnSJ47jLqrvbpyr",                    \
-//         "guAIP2Wq43Gf8VhHsyu5", "yT6c2loPebHovnq9BQog", "3qvU1xcVm2g1DKFDlqh4",                    \
-//         "L0q8RR9P41VD4sVjdnWl", "YdjESsIZM4b1oGQPjpBe", "l1ZVQbWKw7brHUSimJgq",                    \
-//         "xdn0cf4vqRzpfXWtl10G", "lYnZvpqaV0s8DowMZwzV", "8P1cyKrwJNLoJyvLjYqO",                    \
-//         "4MhOXNbAX23CEijO5cRT", "tHe3miAwCOVQbuoLaEP2", "l6uNLsc8fiLl3eWoG6j6",                    \
-//         "477xt6l0lph9ALQdr4HX", "D9UJNe4s8YF02LhrwOdl", "dLCisBNOdE8yugntu6cj",                    \
-//         "YvY4aQFHgAuagn4dFLO1", "eGR6Dtv7LW75qlV5Fkik"                                             \
-//     };                                                                                             \
-//     std::string b_string[64] = {                                                                   \
-//         "uvg6KqtcgduR31n3ajsv", "wbiAcjgojb9JOagZwyMn", "ATZKCzaPOqgkhPjwuGlf",                    \
-//         "MOhaJs56yjOw8f6nLPRA", "0gyB2Tr42v6awMw2nK7J", "e6GsiLFUuoDpVFEhJKZ1",                    \
-//         "z0jXAhiV9keBsaLOY0Xf", "P68p2ZAosHJdmoZh1C7N", "Pu3EuZVeY0TCO3ojdK0t",                    \
-//         "z7jCHMooHCS73M8GygKB", "uT4KoK83JrZxZjkul7ty", "g8gfrZoY5XwfzRusvHvv",                    \
-//         "7PGmkM0OSRnYREt9mFIP", "q1od7mBIpPEsCtpF9kdw", "XQo0LWId5TdZnLnpUNOb",                    \
-//         "U0m1R0kFFhAFyS6hmHHw", "K0lPKfxJxIOnE8QB90xn", "cZ5xyQifMJhrKxqBK9A7",                    \
-//         "cFBiwjfYw7Js6qEGy5Kt", "1tW0KWfXxeFO69tByqcE", "3Fvq9NxBrhPXHe0IlIVx",                    \
-//         "MSRDjdFRvHAhFGhiMtDe", "zGm2joMh71jQkYzg5L4V", "Mq4RRaeLvSAO0z2ibp8Q",                    \
-//         "WnLFYnQKP8TNJkqVVbUg", "E98UphbbVSzrW5Mzurmg", "F8HRxeEcaTZDkFPkioij",                    \
-//         "jmUVl4Q8X5BwVNzXN219", "n7Xp4w4FwzGKit7AI4SO", "4MxXYr6rKOcXLt9UkVd2",                    \
-//         "4RVTDsADtRyboaai9d29", "XaSqsrrtdhAfFoJIc5KK", "9Z9jdVCrTT09bg348ceb",                    \
-//         "I6uqLG9dO5mfNdSMwOYm", "UwMTzJPlbnhgwbHpDi6w", "DebjMP9afncYE6GhhO00",                    \
-//         "YGPuscYDiGfAjY1UWST0", "K6gbvgGjVZgEFUDlkdSk", "8xCBPI0w6TpC0RA62c2W",                    \
-//         "fYMxkNwmKg3moP8KvD9v", "QpPdhwhEYjIugg3OPcPH", "qQBXjSn43I3EMP54SyxZ",                    \
-//         "7qvdKwoW1CQEZTWPvuSC", "rCT212rdYO0zTGHXesKg", "dBHvlHsBwcR9MkkenYYG",                    \
-//         "NQiSlergqR8fVbOeivLj", "xYVqsV147UIe7jVBVwXo", "tcxayO4DdEJ885TbqUMy",                    \
-//         "9TGSMTD8U8ksRpHqq0cL", "TIJ16jCv9BSUiWvhbF9T", "BM9GL2ig1hePkA6lM6Ck",                    \
-//         "TfJTYB9JQMU6CGcYg20Q", "Fg6e5YT2FQbpTZNTDqdo", "LI5q6ml40MeE9H1dPb93",                    \
-//         "OaxJUSm3nYN9Y8Ela7sS", "BgBeODAwXz7xJo50Rwqd", "xdkgKj1dEoJ6zuVhkvvo",                    \
-//         "olIewtUEvXJgs1lB9bCn", "dTsPDS0x2uXtcgOIJHb8", "DYvJ2phLppGNZKboTBrd",                    \
-//         "DjNFMtt9PxkzqvWBHI6j", "1Z3YkeTFlPniKnzFhzgu", "76XqQg6hqMf5IXxKPOEs",                    \
-//         "gzaapTWW7i9EZjjzLeK6"                                                                     \
-//     }; 
+std::string b_string[64] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63"};
+std::string s_string[32] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
+int b_int[64] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63};
+int s_int[32] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
+
+ int main()
+ {
+     {
+         ft::vector<int> v;
+
+         v.assign(s_int, s_int + 32);
+
+         std::cout << v.size() << std::endl;
+         std::cout << v.capacity() << std::endl;
+
+          v.push_back(64);
+          std::cout << v.size() << std::endl;
+          std::cout << v.capacity() << std::endl;
+          v.assign(b_int, b_int + 64);
+          std::cout << "----------------" << std::endl;
+     }
+     {
+        ft::vector<std::string> v;
+        std::string s;
+        std::istringstream str("1 2 3 4 5 6 7");
+        while (str >> s)
+            v.push_back(s);
+        std::cout << v.size() << std::endl;
+        std::cout << v.capacity() << std::endl;
+        v.assign(v.begin(), v.end());
+        std::cout << v.size() << std::endl;
+        std::cout << v.capacity() << std::endl;
+        v.assign(v.begin(), v.begin() + 21);
+        std::cout << v.size() << std::endl;
+        std::cout << v.capacity() << std::endl;
+        std::cout << "----------------" << std::endl;
+     }
+     {
+         ft::vector<std::string> v;
+
+         v.assign(b_string, b_string + 64);
+         std::cout << v.size() << std::endl;
+         std::cout << v.capacity() << std::endl;
+         v.assign(65, "test");
+         std::cout << v.size() << std::endl;
+         std::cout << v.capacity() << std::endl;
+         v.assign(s_string, s_string + 32);
+         std::cout << v.size() << std::endl;
+         std::cout << v.capacity() << std::endl;
+         std::cout << "----------------" << std::endl;
+     }
+ }
 
 // int main()
 // {
-//     ft::Vector<std::string> vec;
-//     std::vector<std::string> stdvec;
-
-//     vec.assign(b_string, b_string + 64);
-//     stdvec.assign(b_string, b_string + 64);
-
-//     vec.assign(65 , "test");
-//     stdvec.assign(65 , "test");
-
-//     vec.assign(s_string, s_string + 32);
-//     stdvec.assign(s_string, s_string + 32);
-    
-//     // vec.assign(s_string, s_string);
-//     // stdvec.assign(s_string, s_string);
-
-//     std::cout << vec.capacity() << std::endl;
-//     std::cout << stdvec.capacity() << std::endl;
-
-//     std::cout << vec.size() << std::endl;
-//     std::cout << stdvec.size() << std::endl;
-
-//     assert(vec.size() == stdvec.size());
-//     assert(vec.capacity() == stdvec.capacity());
-//     assert(vec[0] == stdvec[0]);
-
-
-//     return 0;
+//     ft::vector<std::string> v;
+//     ft::vector<std::string>::iterator it = v.insert(v.begin(), b_string[54]);
+//     std::cout << *it << std::endl;
+//     it = v.insert(v.begin(), b_string[19]);
+//     std::cout << *it << std::endl;
 // }
 
-int main()
-{
-    long int a = 0;
-    for (int i = 0; i < 64; i++)
-    {
-        a += i;
-    }
-    long int b = 0;
-    for (int i = 0; i < 32; i++)
-    {
-        b += i;
-    }
+// int main(){
+//     const int size = 5;
+//     ft::vector<int> vct(size);
+//     ft::vector<int>::reverse_iterator it = vct.rbegin();
+//     ft::vector<int>::const_reverse_iterator ite = vct.rbegin();
+//
+// 	for (int i = 0; i < size; ++i)
+// 		it[i] = (size - i) * 5;
+//
+// 	it = it + 5;
+// 	it = 1 + it;
+// 	it = it - 4;
+// 	std::cout << *(it += 2) << std::endl;
+// 	std::cout << *(it -= 1) << std::endl;
+//
+// 	*(it -= 2) = 42;
+// 	*(it += 2) = 21;
+//
+// 	std::cout << "const_ite +=/-=: " << *(ite += 2) << " | " << *(ite -= 2) << std::endl;
+//
+// 	std::cout << "(it == const_it): " << (ite == it) << std::endl;
+// 	std::cout << "(const_ite - it): " << (ite - it) << std::endl;
+// 	std::cout << "(ite + 3 == it): " << (ite + 3 == it) << std::endl;
+//
+// }
 
-    ft::Vector<long> vec;
-    std::vector<long> stdvec;
+//class B {
+//public:
+//    char *l;
+//    int i;
+//
+//    B() : l(nullptr), i(1) {};
+//
+//    B(const int &ex) {
+//        this->i = ex;
+//        this->l = new char('a');
+//    };
+//
+//    virtual ~B() {
+//        delete this->l;
+//        this->l = nullptr;
+//    };
+//};
+//
+//class A : public B {
+//public:
+//    A() : B() {};
+//
+//    A(const B *ex) {
+//        this->l = new char(*(ex->l));
+//        this->i = ex->i;
+//        if (ex->i == -1)
+//            throw "n";
+//    }
+//
+//    ~A() {
+//        delete this->l;
+//        this->l = nullptr;
+//    };
+//};
+//
+//int main() {
+//    try {
+//        std::unique_ptr <B> k2(new B(3));
+//        ft::vector<A> vv;
+//        ft::vector<B *> vv2;
+//
+//        vv2.push_back(&(*k2));
+//
+//        std::cout << "----------------" << std::endl;
+//        vv.insert(vv.begin(), vv2.begin(), vv2.end());
+//        std::cout << "----------------" << std::endl;
+//    }
+//    catch (const char *e) {
+//        std::cout << e << std::endl;
+//    }
+//}
 
-    vec.assign(a, a + 64);
-    stdvec.assign(a, a + 64);
+// int main()
+// {
+//     ft::vector<long> v1;
+//     ft::vector<long> v2;
 
-    vec.assign(b, b + 32);
-    stdvec.assign(b, b + 32);
+//     if (v1 == v2)
+//     {
+//         printf("Equal");
+//     }
+// }
 
-    std::cout << vec.capacity() << std::endl;
-    std::cout << stdvec.capacity() << std::endl;
-
-    assert(vec.size() == stdvec.size());
-    assert(vec.capacity() == stdvec.capacity());
-    assert(vec[30] == stdvec[30]);
-
-    
-}
+// int main()
+// {
+//     ft::vector<char> v1;
+//     std::vector<char> v2;
+//     std::cout << v1.max_size() << std::endl;
+//     std::cout << v2.max_size() << std::endl;
+//     std::cout << PTRDIFF_MAX << std::endl;
+//
+// }
