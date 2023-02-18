@@ -2,7 +2,6 @@
 #define STD_FUNCTIONS_HPP
 
 #include "../Iterators/IteratorTraits.hpp"
-#include "pair.hpp"
 
 namespace ft
 {
